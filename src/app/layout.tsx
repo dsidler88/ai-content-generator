@@ -1,12 +1,13 @@
 import { cn } from "@/lib/utils";
 import "./globals.css";
 import type { Metadata } from "next";
-import { Lexend } from "next/font/google";
+import { Raleway } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import { Provider } from "@/components/Providers";
+import { Toaster } from "@/components/ui/toaster";
 
-const lexend = Lexend({ subsets: ["latin"] });
-
+//const lexend = Lexend({ subsets: ["latin"] });
+const lexend = Raleway({ weight: "600", subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Learning Journey",
   description: "DTAS TEST AUTOMATION",
@@ -23,6 +24,7 @@ export default function RootLayout({
         <Provider>
           <Navbar />
           {children}
+          <Toaster />
         </Provider>
       </body>
     </html>

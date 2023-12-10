@@ -52,3 +52,55 @@ model User {
   accounts Account[]
   sessions Session[]
 }
+
+//course can contain many units. one to many image is url to CDN
+model Course {
+  id    String @id @default(cuid())
+  name  String
+  image String
+  units Unit[]
+}
+
+//one unit can have many chapters. courseID links it back
+//adding index to courseID speeds up queries, and is needed here
+model Unit {
+  id       String @id @default(cuid())
+  courseId String
+
+  name     String
+  chapters Chapter[]
+  course   Course    @relation(fields: [courseId], references: [id])
+
+  @@index([courseId], name: "courseId")
+}
+
+//chapters are linked to a query for videos, as well as optionally, a video.
+model Chapter {
+  id     String @id @default(cuid())
+  unitId String
+
+  name               String
+  youtubeSearchQuery String
+  videoId            String?
+  summary            String?    @db.VarChar(3000)
+  //belongs to a Unit
+  unit               Unit       @relation(fields: [unitId], references: [id])
+  questions          Question[]
+
+  @@index([unitId], name: "unitId")
+}
+
+//questions are linked to a chapter
+model Question {
+  id        String @id @default(cuid())
+  chapterId String
+
+  question String @db.VarChar(3000)
+  answers  String @db.VarChar(3000)
+  options  String @db.VarChar(3000)
+
+  //belongs to a Chapter
+  chapter Chapter @relation(fields: [chapterId], references: [id])
+
+  @@index([chapterId], name: "chapterId")
+}
